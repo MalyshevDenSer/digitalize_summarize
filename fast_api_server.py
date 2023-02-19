@@ -5,6 +5,7 @@ from fastapi import FastAPI, Form, Cookie
 from fastapi.responses import Response
 import os
 from dotenv import load_dotenv
+import json
 import hmac
 import hashlib
 
@@ -25,7 +26,7 @@ def sign_data(data: str) -> str:
 
 def get_username_from_signed_string(username_signed: str) -> Optional[str]:
     username_base64, sign = username_signed.split('.')
-    username = base64.b16decode(username_base64.encode()).decode()
+    username = base64.b64decode(username_base64.encode()).decode()
     valid_sign = sign_data(username)
     if hmac.compare_digest(valid_sign, sign):
         return username
@@ -55,25 +56,34 @@ users = {
 def index_page(username: Optional[str] = Cookie(default=None)):
     with open('templates/login.html', 'r') as f:
         login_page = f.read()
-    if username and users.get(username) is not None:
-        valid_username = get_username_from_signed_string(username)
-        if not valid_username:
-            response = Response(login_page, media_type='text/html')
-            response.delete_cookie(key="username")
-            return response
-        return Response(f'Привет {users[username]["name"]}!', media_type='text/html')
-    else:
+    if not username:
+        return Response(login_page, media_type='text/html')
+    valid_username = get_username_from_signed_string(username)
+    if not valid_username:
         response = Response(login_page, media_type='text/html')
         response.delete_cookie(key="username")
         return response
+    else:
+        return Response(f"Привет, {users[valid_username]['name']}!", media_type='text/html')
+
 
 
 @app.post('/login')
 def process_login_page(username=Form(...), password=Form(...)):
     user = users.get(username)
     if not user or not verify_password(username, password):
-        return Response('Я вас не знаю', media_type='text/html')
-    response = Response(f'Привет {username}, твой баланс {user["balance"]}', media_type='text/html')
+        return Response(
+            json.dumps({
+                "success": False,
+                "message": "Я вас не знаю!"
+            }),
+            media_type='application/json')
+    response = Response(json.dumps({
+                "success": True,
+                "message": f"Привет {username}, твой баланс {user['balance']}"
+            }),
+        media_type='application/json')
     username_signed = base64.b64encode(username.encode()).decode() + '.' + sign_data(username)
+    print('au2')
     response.set_cookie(key='username', value=username_signed)
     return response
