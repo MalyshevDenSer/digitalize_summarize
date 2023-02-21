@@ -1,19 +1,24 @@
-from fastapi import Request, Response, FastAPI, Form
+from fastapi import Request, Response, FastAPI, Form, Query
 
 app = FastAPI()
 PHONE_FORMAT = ((1, ' '), (2, '('), (6, ')'), (7, ' '), (11, '-'), (14, '-'))
 
 
-
 @app.post('/unify_phone_from_json')
-async def main(info: Request):
+async def unify_phone_from_json(info: Request):
     req_info = await info.json()
     if not req_info.get('phone'):
         return {'status': 'FALSE'}
     return Response(unify_phone_number(req_info['phone']), media_type='text/html')
 
+
 @app.post('/unify_phone_from_form')
-async def main(phone: str = Form()):
+async def unify_phone_from_form(phone: str = Form()):
+    return Response(''.join(unify_phone_number(phone)), media_type='text/html')
+
+
+@app.get('/unify_phone_from_query')
+async def unify_phone_from_query(phone=Query()):
     return Response(''.join(unify_phone_number(phone)), media_type='text/html')
 
 
