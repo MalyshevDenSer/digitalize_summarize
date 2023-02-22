@@ -67,7 +67,6 @@ def index_page(username: Optional[str] = Cookie(default=None)):
         return Response(f"Привет, {users[valid_username]['name']}!", media_type='text/html')
 
 
-
 @app.post('/login')
 def process_login_page(username=Form(...), password=Form(...)):
     user = users.get(username)
@@ -79,9 +78,9 @@ def process_login_page(username=Form(...), password=Form(...)):
             }),
             media_type='application/json')
     response = Response(json.dumps({
-                "success": True,
-                "message": f"Привет {username}, твой баланс {user['balance']}"
-            }),
+        "success": True,
+        "message": f"Привет {username}, твой баланс {user['balance']}"
+    }),
         media_type='application/json')
     username_signed = base64.b64encode(username.encode()).decode() + '.' + sign_data(username)
     print('au2')
