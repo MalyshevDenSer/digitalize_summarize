@@ -1,4 +1,5 @@
 from fastapi import Request, Response, FastAPI, Form, Query, Cookie
+import json
 
 app = FastAPI()
 PHONE_FORMAT = ((1, ' '), (2, '('), (6, ')'), (7, ' '), (11, '-'), (14, '-'))
@@ -8,7 +9,7 @@ PHONE_FORMAT = ((1, ' '), (2, '('), (6, ')'), (7, ' '), (11, '-'), (14, '-'))
 async def unify_phone_from_json(info: Request):
     req_info = await info.json()
     if not req_info.get('phone'):
-        return {'status': 'FALSE'}
+        return Response(json.dumps({"success": False}), media_type='application/json')
     return unify_phone_number(req_info['phone'])
 
 
