@@ -19,7 +19,7 @@ async def unify_phone_from_form(phone: str = Form()):
 
 
 @app.get('/unify_phone_from_query')
-async def unify_phone_from_query(phone=Query()):
+async def unify_phone_from_query(phone):
     return unify_phone_number(phone)
 
 
