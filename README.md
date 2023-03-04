@@ -35,22 +35,22 @@
 {"phone": "89013455678"}
 ```
 
-Моя реализация: https://authmalyshev.ru/unify_phone_from_json
+https://authmalyshev.ru/unify_phone_from_json
 
 #### 2. Обработка данных формы:
 
 Сервис обрабатывает HTTP POST запросы и принимает телефон в теле Form Data
 
-Моя реализация: https://authmalyshev.ru/unify_phone_from_form
+https://authmalyshev.ru/unify_phone_from_form
 
 #### 3. Обработка query параметров:
 
 Сервис обрабатывает HTTP GET запросы и принимает телефон в query параметре
 
-Моя реализация: https://authmalyshev.ru/unify_phone_from_query
+https://authmalyshev.ru/unify_phone_from_query
 
 #### 4. Обработка данных Cookies:
 
 Сервис обрабатывает HTTP GET запросы и принимает телефон в Cookie записи ```phone```
 
-Моя реализация: https://authmalyshev.ru/unify_phone_from_cookies
+https://authmalyshev.ru/unify_phone_from_cookies
